@@ -1,14 +1,15 @@
 #!/bin/bash
 
+set -o xtrace
 export MYSQL_ROOT_PASSWORD="mysqlpassword"
-export MYSQL_HOST=`hostname -I`
+export MYSQL_HOST="10.0.3.2"
 export MYSQL_NOVA_USER="nova"
 export MYSQL_NOVA_PASSWORD="nova"
 
 function mysql_cmd() {
-    set +o xtrace
-    mysql -uroot -p$MYSQL_ROOT_PASSWORD -h$MYSQL_HOST -e "$@"
     set -o xtrace
+    mysql -uroot -p$MYSQL_ROOT_PASSWORD -h$MYSQL_HOST -e "$@"
+    set +o xtrace
 }
 
 # create database
@@ -17,9 +18,9 @@ if [[ $cnt -eq 0 ]]; then
     mysql_cmd "create database nova CHARACTER SET utf8;"
 fi
 
-cnt=`mysql_cmd "show databases;" | grep nova-api | wc -l`
+cnt=`mysql_cmd "show databases;" | grep nova_api | wc -l`
 if [[ $cnt -eq 0 ]]; then
-    mysql_cmd "create database nova-api CHARACTER SET utf8;"
+    mysql_cmd "create database nova_api CHARACTER SET utf8;"
 fi
 
 
@@ -28,9 +29,11 @@ mysql_cmd "use mysql; delete from user where user=''; flush privileges;"
 mysql_cmd "grant all privileges on nova.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
 mysql_cmd "grant all privileges on nova.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
 
-mysql_cmd "grant all privileges on nova-api.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
-mysql_cmd "grant all privileges on nova-api.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
+mysql_cmd "grant all privileges on nova_api.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
+mysql_cmd "grant all privileges on nova_api.* to '$MYSQL_NOVA_USER'@'%' identified by '$MYSQL_NOVA_PASSWORD';"
 mysql_cmd "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' identified by '$MYSQL_ROOT_PASSWORD'; FLUSH PRIVILEGES;"
 mysql_cmd "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' identified by '$MYSQL_ROOT_PASSWORD'  WITH GRANT OPTION; FLUSH PRIVILEGES;"
 
 mysql_cmd "flush privileges;"
+
+set +o xtrace
