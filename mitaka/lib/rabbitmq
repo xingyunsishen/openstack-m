@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function setup_rabbitmq() {
+    apt install -y rabbitmq-server
+    rabbitmqctl add_user openstack RABBIT_PASS
+    rabbitmqctl set_permissions openstack ".*" ".*" ".*"
+}

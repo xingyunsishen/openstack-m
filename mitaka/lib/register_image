@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function upload_image() {
+    . ~/adminrc
+    glance image-list
+    openstack image create "cirros" \
+  --file $TOPDIR/lib/cirros-git-disk.qcow2 \
+  --disk-format qcow2 --container-format bare \
+  --public
+}

@@ -1,0 +1,35 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+
+allow-ovs br-ex
+iface br-ex inet static
+    address 192.168.211.5
+    broadcast 192.168.211.255
+    dns-nameservers 114.114.114.114
+    gateway 192.168.211.1
+    netmask 255.255.255.0
+    ovs_type OVSBridge
+    ovs_ports eth0
+
+# The primary network interface
+allow-br-ex eth0
+iface eth0 inet manual
+    up ifconfig $IFACE 0.0.0.0 up
+    down ifconfig $IFACE down
+    ovs_bridge br-ex
+    ovs_type OVSPort
+    up ip route add default via 192.168.211.1 dev br-ex
+
+
+auto eth1
+iface eth1 inet static
+	address 192.168.56.20
+	netmask 255.255.255.0
+	gateway 192.168.56.1
+	dns-nameserver 114.114.114.114

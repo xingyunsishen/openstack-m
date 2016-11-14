@@ -1,0 +1,8 @@
+#!/bin/bash
+
+function setup_memcached() {
+    apt install -y memcached python-memcache
+    conf_file="/etc/memcached.conf"
+    sed -i "s,127.0.0.1,0.0.0.0,g" $conf_file
+    service memcached restart
+}

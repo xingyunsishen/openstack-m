@@ -1,0 +1,34 @@
+#!/bin/bash
+
+TOPDIR=$(cd $(dirname "$0") && pwd)
+cd $TOPDIR
+
+# need to set up proxy?
+if [[ -e ./proxy ]]; then
+    . proxy
+fi
+
+# setup mitaka package source.
+. lib/package
+setup_package_source
+
+# setup ntp package
+. lib/ntp
+setup_ntp
+
+# setup mysql/mariadb
+
+. lib/mariadb
+setup_mariadb
+
+. lib/keystone
+setup_keystone
+
+. lib/init_keystone
+setup_init_keystone
+
+. lib/glance
+setup_glance
+
+. lib/register_image
+upload_image

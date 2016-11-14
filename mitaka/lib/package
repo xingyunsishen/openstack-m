@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function setup_package_source() {
+    apt-get -y update
+    apt-get install -y software-properties-common
+    add-apt-repository -y cloud-archive:mitaka
+    apt-get -y update && apt-get -y dist-upgrade
+    apt-get install -y python-openstackclient crudini ipcalc
+    sed -i "/sleep/d" /etc/init/failsafe.conf
+}
