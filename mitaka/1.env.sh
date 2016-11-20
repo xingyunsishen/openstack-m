@@ -2,8 +2,6 @@
 
 export force="0"
 
-export local_ip=$(ifconfig eth0 | grep "inet addr" | awk -F : '{print $2}' | awk '{print $1}')
-export local_net=$(ipcalc -n $local_ip 255.255.255.0 | grep "Network" | awk '{print $2}')
 
 TOPDIR=$(cd $(dirname "$0") && pwd)
 cd $TOPDIR
@@ -55,7 +53,8 @@ if [[ ! -e /etc/apt/sources.list.d/cloudarchive-mitaka.list || $force -gt 0 ]]; 
     apt-get install -y python-openstackclient crudini ipcalc
     sed -i "/sleep/d" /etc/init/failsafe.conf
 fi
-
+export local_ip=$(ifconfig eth0 | grep "inet addr" | awk -F : '{print $2}' | awk '{print $1}')
+export local_net=$(ipcalc -n $local_ip 255.255.255.0 | grep "Network" | awk '{print $2}')
 
 #----------------------------------------------------------------------------------------------
 # Begin to setup package
