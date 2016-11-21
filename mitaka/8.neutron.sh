@@ -2,7 +2,7 @@
 
 export force="0"
 
-export local_ip=$(ifconfig br-ex | grep "inet addr" | awk -F : '{print $2}' | awk '{print $1}')
+export local_ip=$(ifconfig eth1 | grep "inet addr" | awk -F : '{print $2}' | awk '{print $1}')
 export local_net=$(ipcalc -n $local_ip 255.255.255.0 | grep "Network" | awk '{print $2}')
 
 TOPDIR=$(cd $(dirname "$0") && pwd)
